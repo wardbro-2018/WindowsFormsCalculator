@@ -172,7 +172,6 @@ namespace BasicCalculator
             {
                 this.UserInputText.Text = this.UserInputText.Text.Remove(this.UserInputText.SelectionStart, 1);
             }
-            int cal = 5 * 7 + 12 + (6 % 7);
 
             this.UserInputText.SelectionStart = selectionStart;
             this.UserInputText.SelectionLength = 0;
@@ -184,7 +183,51 @@ namespace BasicCalculator
         /// </summary>
         private void CalculateEquation()
         {
-            throw new NotImplementedException();
+            this.CalculatorResultText.Text = ParseOperation();
+            FocusInputText();
+        }
+
+        /// <summary>
+        /// Parses user's equation and returns result.
+        /// </summary>
+        /// <returns></returns>
+        private string ParseOperation()
+        {
+            try
+            {
+                var Input = this.UserInputText.Text;
+
+                Input = Input.Replace(" ", "");
+
+                var operation = new Operation();
+                var leftSide = true;
+
+                for(int i = 0; i < Input.Length; i++)
+                {
+                    if ("0123456789".Any(c => Input[i] == c))
+                    {
+                        if (leftSide)
+                        {
+                            operation.LeftSide = AddNumberPart(operation.LeftSide, Input[i]);
+                        }
+
+                    }
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return  $"invalid equation. {ex.Message}";
+            }
+        }
+
+        private string AddNumberPart(string CurrentNumber, char newCharacter)
+        {
+            if (newCharacter == '.' && CurrentNumber.Contains('.'))
+                throw new InvalidOperationException($"Number {CurrentNumber} already contains a . and another can't be added.");
+
+            return CurrentNumber + newCharacter;
         }
         #endregion
     }
